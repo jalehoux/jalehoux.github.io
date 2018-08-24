@@ -59,9 +59,16 @@
 //Modal
   $('.portfolio-box').on("click", function(e) {
     e.preventDefault();
-    console.log(e);
+    var $this = $(this);
+    var name = $this.children('div.portfolio-box-caption').children('.portfolio-box-caption-content').children('.project-name').text();
+    var img = $this.children('img.img-fluid').attr('src');
+    var description = $this.data('description');
+    console.log(description);
+    var $newImg = $('<img>').attr('src', img).addClass('');
+    $('#image').html($newImg);
+    $('#description').html(description);
+    $('.modal-title').html(name);
     $('.modal.fade.bd-example-modal-lg').modal('toggle');
-
 });
 
 })(jQuery); // End of use strict
