@@ -63,8 +63,7 @@
     var name = $this.children('div.portfolio-box-caption').children('.portfolio-box-caption-content').children('.project-name').text();
     var img = $this.children('img.img-fluid').attr('src');
     var description = $this.data('description');
-    console.log(description);
-    var $newImg = $('<img>').attr('src', img).addClass('');
+    var $newImg = $('<img>').attr('src', img).addClass('img-fluid');
     $('#image').html($newImg);
     $('#description').html(description);
     $('.modal-title').html(name);
