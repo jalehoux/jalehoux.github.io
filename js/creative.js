@@ -60,12 +60,17 @@
   $('.portfolio-box').on("click", function(e) {
     e.preventDefault();
     var $this = $(this);
+    console.log($this);
     var name = $this.children('div.portfolio-box-caption').children('.portfolio-box-caption-content').children('.project-name').text();
     var img = $this.children('img.img-fluid').attr('src');
     var description = $this.data('description');
+    var live = $this.data('live');
+    var repo = $this.data('repo');
     var $newImg = $('<img>').attr('src', img).addClass('img-fluid');
     $('#image').html($newImg);
     $('#description').html(description);
+    $('#live').attr('href',live);
+    $('#repo').attr('href',repo);
     $('.modal-title').html(name);
     $('.modal.fade.bd-example-modal-lg').modal('toggle');
 });

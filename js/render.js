@@ -1,7 +1,7 @@
 var portfolioItems = [
   {
-    img_thumbnail: 'img/portfolio/thumbnails/1.jpg',
-    img_fullsize: 'img/portfolio/fullsize/1.jpg',
+    img_thumbnail: 'img/portfolio/thumbnails/giffy.gif',
+    img_fullsize: 'img/portfolio/fullsize/giffy.gif',
     category: 'Front End',
     name: 'Movie GIF Finder',
     description: 'Built with Bootstrap this simple web app allows you to search for movies and GIFS.',
@@ -50,19 +50,20 @@ var portfolioItems = [
     tech: ['Fire Base', 'Bootstrap','Moment.js']
   },
   {
-    img_thumbnail: 'img/portfolio/thumbnails/6.jpg',
-    img_fullsize: 'img/portfolio/fullsize/6.jpg',
-    category: 'Back End',
-    name: 'Project 2',
-    liveSite: 'NA',
-    repo: 'NA',
-    tech: ['Node']
+    img_thumbnail: 'img/portfolio/fullsize/Star_wars.PNG',
+    img_fullsize: 'img/portfolio/fullsize/Star_wars.PNG',
+    category: 'Front end',
+    name: 'Star Wars Memory Game',
+    description: 'This is a Star Wars based memory game built entirely in React.  Test your skills and show your love of Star Wars!',
+    liveSite: 'https://starwarsclicky.herokuapp.com/',
+    repo: 'https://github.com/jalehoux/clicky_game',
+    tech: ['React, Heroku']
   }
 ]
 
 portfolioItems.forEach(element => {
   var newProject = `<div class="col-lg-4 col-sm-6">
-<a class="portfolio-box" href="${element.img_fullsize}" data-description="${element.description}">
+<a class="portfolio-box" href="${element.img_fullsize}" data-description="${element.description}" data-live="${element.liveSite}" data-repo="${element.repo}">
   <img class="img-fluid" src="${element.img_thumbnail}" alt="">
   <div class="portfolio-box-caption">
     <div class="portfolio-box-caption-content">
