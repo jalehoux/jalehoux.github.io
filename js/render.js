@@ -32,12 +32,12 @@ var portfolioItems = [
   {
     img_thumbnail: 'img/portfolio/thumbnails/4.jpg',
     img_fullsize: 'img/portfolio/fullsize/4.jpg',
-    category: 'Back End',
-    name: 'LIRI',
-    description: 'Simple Node app that can return data in a shell about movies, songs, and bands.',
-    liveSite: 'Still in progress',
-    repo: 'https://github.com/jalehoux/liri',
-    tech: ['Node']
+    category: 'Full Stack',
+    name: 'Project 3',
+    description: 'An Enterprise web application for resource management.',
+    liveSite: '',
+    repo: '',
+    tech: ['Node, Express, React, mySQL']
   },
   {
     img_thumbnail: 'img/portfolio/thumbnails/5.jpg',
@@ -50,7 +50,7 @@ var portfolioItems = [
     tech: ['Fire Base', 'Bootstrap','Moment.js']
   },
   {
-    img_thumbnail: 'img/portfolio/fullsize/Star_wars.PNG',
+    img_thumbnail: 'img/portfolio/thumbnails/Star_wars.PNG',
     img_fullsize: 'img/portfolio/fullsize/Star_wars.PNG',
     category: 'Front end',
     name: 'Star Wars Memory Game',
