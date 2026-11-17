@@ -11,7 +11,7 @@ metrics:
   - value: "~89%"
     label: classifier accuracy
 links:
-  repo: https://github.com/jalehoux  # TODO(jacob): link the actual repo
+  repo: https://github.com/jalehoux/birdwatch  # TODO(jacob): make the repo public before going live
 order: 3
 ---
 
