@@ -3,7 +3,7 @@ title: Field scheduling platform
 summary: An internal platform that replaced double data entry across two systems with one integrated scheduling flow, from support ticket to booked appointment.
 context: Wayfair
 role: Tech lead and front-end engineer, team of three
-period: 2024 — Present  # TODO(jacob): real start month/year, and is it still running?
+period: Summer — Sept 2026
 stack: [FastAPI, PostgreSQL, Celery, Redis, Google Calendar API, Google Maps API]
 metrics:
   - value: "~60"
@@ -11,7 +11,7 @@ metrics:
   - value: "30"
     label: facilities served
   - value: "Hundreds"
-    label: of orders taken in
+    label: of requests handled
 confidential: true
 order: 2
 ---
@@ -45,7 +45,7 @@ There were a few issues after launch. They were minor, and we caught and fixed t
 
 ## Results
 
-- **Hundreds of orders** taken in through the new flow
+- **Hundreds of requests** handled through the new flow
 - **Simpler work for support agents:** one entry point instead of keying data into two systems
 - **Faster turnaround** on scheduling requests
 - **Better analytics,** because every appointment now lives in one system
