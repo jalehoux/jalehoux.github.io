@@ -13,6 +13,7 @@ metrics:
 links:
   repo: https://github.com/jalehoux  # TODO(jacob): link the actual repo
 order: 3
+draft: true  # Hidden until the project is finished
 ---
 
 > **TODO(jacob):** Add a short demo clip or a few sample detections (a GIF in `public/` works), link the real repo, and check the numbers.
