@@ -1,0 +1,51 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'work'>;
+}
+
+const { entry } = Astro.props;
+const { title, summary, context, stack, metrics } = entry.data;
+---
+
+<a class="card" href={`/work/${entry.id}/`}>
+  <p class="eyebrow">{context}</p>
+  <h3>{title}</h3>
+  <p class="summary">{summary}</p>
+  {
+    metrics.length > 0 && (
+      <ul class="metrics">
+        {metrics.slice(0, 2).map((m) => (
+          <li>
+            <strong>{m.value}</strong> {m.label}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <p class="stack">{stack.slice(0, 4).join(' · ')}</p>
+  <span class="more">Read case study →</span>
+</a>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    color: var(--ink);
+    text-decoration: none;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  h3 { font-size: 1.45rem; margin: 0; }
+  .summary { color: var(--muted); margin: 0; }
+  .metrics { list-style: none; padding: 0; margin: 0.25rem 0; font-size: 0.92rem; }
+  .metrics strong { color: var(--accent); font-weight: 600; }
+  .stack { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); margin: auto 0 0; padding-top: 0.5rem; }
+  .more { font-size: 0.9rem; font-weight: 500; color: var(--accent); }
+</style>
