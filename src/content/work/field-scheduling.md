@@ -1,50 +1,55 @@
 ---
 title: Field scheduling platform
-summary: An internal platform for scheduling and routing field staff across facilities, owned end to end from design to production support.
+summary: An internal platform that replaced double data entry across two systems with one integrated scheduling flow, from support ticket to booked appointment.
 context: Wayfair
-role: Sole engineer / owner  # TODO(jacob): confirm
-period: 2024 — Present  # TODO(jacob): real dates
+role: Tech lead and front-end engineer, team of three
+period: 2024 — Present  # TODO(jacob): real start month/year, and is it still running?
 stack: [FastAPI, PostgreSQL, Celery, Redis, Google Calendar API, Google Maps API]
 metrics:
   - value: "~60"
     label: concurrent users
   - value: "30"
     label: facilities served
+  - value: "Hundreds"
+    label: of orders taken in
 confidential: true
 order: 2
 ---
 
-> **TODO(jacob):** Skeleton only. Fill in, then delete these notes. Keep the internal product name out, and check that it's OK to share the user and facility counts.
-
 ## The problem
 
-> **TODO(jacob):** How was scheduling done before (spreadsheets, phone calls)? What went wrong: double-booking, wasted drive time, no visibility?
+Scheduling an appointment meant working in two separate systems. Customer support agents had to enter the same data into both by hand. That was slow, it was easy for the two systems to drift out of sync, and there was no single place to see what had actually been booked.
 
 ## What I built
 
-A web platform that assigns staff to jobs across facilities, syncs with their calendars, and accounts for drive time between sites.
+I led a team of three engineers (back end, mobile, and me on the front end). We built a web platform that takes requests straight from the support ticket intake system, turns them into appointments, syncs them to staff calendars, and accounts for drive time between sites.
 
 ```
- web app ──▶ FastAPI ──▶ PostgreSQL
-                │
-                └──▶ Celery workers ◀── Redis
-                        ├──▶ Google Calendar (sync)
-                        └──▶ Google Maps (drive times)
+ support tickets ──▶ FastAPI ──▶ PostgreSQL
+                        │
+                        └──▶ Celery workers ◀── Redis
+                                ├──▶ Google Calendar (sync)
+                                ├──▶ Google Maps (drive times)
+                                └──▶ Slack (reminders)
 ```
 
 ## Key decisions
 
-> **TODO(jacob):** Three or four real decisions with the tradeoffs. Some prompts:
-
-- **Background jobs for anything slow:** calendar sync and distance lookups run in Celery so the UI stays fast. _How did you handle retries and API rate limits?_
-- **Conflict handling:** _how do you stop two people from booking the same slot?_ (DB constraints, locking, optimistic updates?)
-- **Caching drive times:** _did you cache Maps results to control cost and latency?_
-- **Rollout:** _how did you move 30 facilities onto it? Pilot first?_
+- **Integrate with ticket intake instead of adding a third screen.** Requests flow in from the existing support ticket system, so agents enter data once and the double entry is gone.
+- **An asynchronous pipeline for creating appointments from templates.** This was the hardest part. Creating new appointments from templates runs as background jobs, not inside the request, with alerting, monitoring and a fallback path when a step fails. The UI stays fast, and a failure gets noticed instead of silently dropping an appointment.
+- **Slow and external work happens in background jobs.** Calendar sync and drive-time lookups run in Celery workers backed by Redis, so the app doesn't depend on Google APIs answering in real time.
 
 ## Running it in production
 
-> **TODO(jacob):** What broke after launch and how you fixed it. Monitoring, alerts, on-call. This is what separates "built it" from "owned it".
+There were a few issues after launch. They were minor, and we caught and fixed them quickly. Running it also showed us gaps worth filling. For example, we added a notification system that reminds staff on Slack before an upcoming appointment.
 
 ## Results
 
-> **TODO(jacob):** Adoption, time saved, fewer conflicts, anything measurable.
+- **Hundreds of orders** taken in through the new flow
+- **Simpler work for support agents:** one entry point instead of keying data into two systems
+- **Faster turnaround** on scheduling requests
+- **Better analytics,** because every appointment now lives in one system
+
+## What I'd do differently
+
+I'd design the API contract more carefully up front so it covered the UI's use cases. Planning the contract around how the front end actually consumes the data would have saved rework between the back end and the clients.
