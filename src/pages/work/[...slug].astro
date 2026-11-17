@@ -96,7 +96,7 @@ const { Content } = await render(entry);
     gap: 1rem;
   }
   .metrics li { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.25rem; }
-  .metrics strong { display: block; font-family: var(--serif); font-size: 1.9rem; font-weight: 500; color: var(--accent); }
+  .metrics strong { display: block; font-family: var(--serif); font-size: clamp(1.3rem, 4.5vw, 1.9rem); font-weight: 500; color: var(--accent); }
   .metrics span { font-size: 0.9rem; color: var(--muted); }
 
   .note {
