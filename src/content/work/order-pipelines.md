@@ -1,52 +1,59 @@
 ---
-title: Event-driven order pipelines
-summary: Replacing batch order processing with asynchronous Kafka pipelines that stream order data into GCP.
+title: Event-driven order creation pipeline
+summary: Replacing a once-a-day Excel import with a Kafka pipeline that creates orders in real time from supplier events.
 context: Wayfair
-role: Lead engineer — design, build, rollout  # TODO(jacob): your actual role on this
-period: 2023 — 2024  # TODO(jacob): real dates
-stack: [Kafka, Python, GCP, BigQuery, Docker]  # TODO(jacob): correct the stack
+role: Owner. Requirements, end-to-end design, build, testing and production monitoring
+period: 2020 — 2021  # TODO(jacob): real years
+stack: [Kafka, Event-driven architecture]  # TODO(jacob): add the language / services you used (e.g. Python, PHP, MySQL)
 metrics:
-  - value: "Millions"  # TODO(jacob): rounded volume, e.g. "Millions of events / day"
-    label: of order events per day
-  - value: "Hours → minutes"  # TODO(jacob): the real before/after
-    label: order data freshness
+  - value: "Daily → real time"
+    label: order creation
+  - value: "Hundreds"
+    label: of orders per day, no manual import
 confidential: true
 order: 1
 ---
 
-> **TODO(jacob):** Everything below is a skeleton. Replace each section with your own details, then delete these notes. Rules: no internal service or team names, round every number, describe patterns rather than proprietary code.
-
 ## The problem
 
-> **TODO(jacob):** What was broken or slow before? Who felt it (warehouse ops, finance, customers)? Why did it matter to the business? Two or three sentences.
-
-Order data reached downstream systems through scheduled batch jobs. That meant stale data, painful backfills when a job failed, and tight coupling between the teams that produced orders and the teams that consumed them.
+Operations created these orders from Excel sheets, imported once a day. That meant orders were never real time, the process was hard to audit, and any bad data had to be found and fixed by hand inside a spreadsheet before it could go anywhere.
 
 ## What I built
 
-A set of greenfield, asynchronous pipelines: services publish order events to Kafka, and Python consumers validate, enrich and land them in GCP for downstream teams.
+I gathered the requirements from operations, designed the whole flow end to end, then built, tested and monitored it in production.
+
+The pipeline listens to an upstream Kafka topic of supplier-side events. For each event it:
+
+1. **Filters**: checks that it's an event we actually care about.
+2. **Deduplicates**: checks whether we've already created this order, so a redelivered or repeated event never creates a duplicate.
+3. **Hydrates**: enriches the event with the domain-specific details the order needs.
+4. **Creates the order**: or, if required data is missing, creates it in a *pending* state for operations to review.
 
 ```
- order services ──▶ Kafka topics ──▶ Python consumers ──▶ GCP storage / warehouse
-                         │                 │
-                         └──▶ DLQ ◀────────┘   (poison messages, replay)
+ supplier events ──▶ Kafka topic ──▶ order consumer
+                                        │
+                     1. relevant? ──no──▶ skip
+                     2. already have it? ──yes──▶ skip
+                     3. hydrate with domain details
+                        │
+               complete? ├── yes ──▶ order created
+                         └── no  ──▶ order created as PENDING ──▶ ops review
 ```
-
-> **TODO(jacob):** Swap this sketch for a real (generic) diagram. Excalidraw exports to SVG, and you can drop it in `public/diagrams/` and reference it here.
 
 ## Key decisions
 
-> **TODO(jacob):** This is the most important section for a senior interview. Pick three or four real decisions, and for each one say what you chose, what you rejected, and why.
-
-- **Async over synchronous APIs:** decoupled producers from consumers so either side could deploy, fail or scale on its own.
-- **Idempotent consumers:** every write is keyed so redelivered or replayed events can't double-count.
-- **Dead-letter queue and replay:** bad messages are parked instead of blocking the partition, and can be replayed after a fix.
-- **Schema evolution:** _how did you handle changing event shapes without breaking consumers?_
+- **Event-driven instead of a better import.** Fixing the spreadsheet would still have left a daily batch. Consuming the supplier events directly made orders real time and removed the manual step entirely.
+- **Idempotency check before every write.** Kafka can deliver an event more than once, so the pipeline checks for an existing order first. Retries and replays are safe, and duplicates can't happen.
+- **Fail into "pending", not into the void.** An order missing data is still created, but parked as pending for a human. Nothing gets silently dropped, the consumer never blocks on one bad event, and operations sees exactly which orders need attention. In practice this was rare.
+- **Hydrate at creation time.** Adding the domain details once, when the order is created, means downstream systems get a complete order and don't each have to look the same things up.
 
 ## Results
 
-> **TODO(jacob):** Concrete outcomes, rounded. Throughput, latency or freshness, incidents avoided, teams onboarded, cost. Use before/after where you can.
+- **Removed the manual daily import** for operations completely.
+- **Real-time orders** instead of once a day.
+- **Fewer errors**, because data is validated at the source instead of corrected in a spreadsheet.
+- **Auditability and analytics:** every order now traces back to the event that created it, which gave the business a much clearer view of order flow.
 
 ## What I'd do differently
 
-> **TODO(jacob):** One honest paragraph. Interviewers love this, because it shows judgment.
+The core design held up, and I'd keep most of it. I'd invest earlier in **alerting and error detail**: alerts when pending orders spike, and a structured reason on every pending order so operations knows exactly what's missing without digging.

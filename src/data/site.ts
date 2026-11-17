@@ -17,7 +17,7 @@ export const experience = [
     title: 'Software Engineer', // TODO(jacob): exact title / level
     period: '2019 — Present',
     blurb:
-      'Greenfield async order pipelines on Kafka and GCP, internal scheduling and logistics tooling, and AI-assisted engineering workflows.',
+      'An event-driven order creation pipeline on Kafka, Python processors streaming warehouse data into GCP, internal scheduling and logistics tooling, and AI-assisted engineering workflows.',
   },
   {
     company: 'Prime Buchholz',
