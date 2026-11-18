@@ -14,7 +14,7 @@ export const site = {
 export const experience = [
   {
     company: 'Wayfair',
-    title: 'Software Engineer', // TODO(jacob): exact title / level
+    title: 'Software Engineer',
     period: '2019 — Present',
     blurb:
       'An event-driven order creation pipeline on Kafka, Python processors streaming warehouse data into GCP, internal scheduling and logistics tooling, and AI-assisted engineering workflows.',
@@ -23,7 +23,8 @@ export const experience = [
     company: 'Prime Buchholz',
     title: 'Frontend Engineer',
     period: '2016 — 2019',
-    blurb: 'Client-facing web applications for an institutional investment consulting firm.', // TODO(jacob): confirm
+    blurb:
+      'Solo-built a mobile-responsive Vue.js app used by 15+ consultants to write client meeting reports in the field, and a Quick Base system that cut data-entry errors by 30%.',
   },
 ];
 

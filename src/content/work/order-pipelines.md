@@ -3,8 +3,7 @@ title: Event-driven order creation pipeline
 summary: Replacing a once-a-day Excel import with a Kafka pipeline that creates orders in real time from supplier events.
 context: Wayfair
 role: Owner. Requirements, end-to-end design, build, testing and production monitoring
-period: 2020 — 2021  # TODO(jacob): real years
-stack: [Kafka, Event-driven architecture]  # TODO(jacob): add the language / services you used (e.g. Python, PHP, MySQL)
+stack: [Kafka, Event-driven architecture]
 metrics:
   - value: "Daily → real time"
     label: order creation

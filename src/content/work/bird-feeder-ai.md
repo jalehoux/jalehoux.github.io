@@ -13,6 +13,7 @@ metrics:
 links:
   repo: https://github.com/jalehoux/birdwatch  # TODO(jacob): make the repo public before going live
 order: 3
+status: in-progress
 ---
 
 > **TODO(jacob):** Add a short demo clip or a few sample detections (a GIF in `public/` works), link the real repo, and check the numbers.

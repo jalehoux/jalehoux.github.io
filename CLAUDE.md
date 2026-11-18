@@ -12,12 +12,13 @@ Personal portfolio for Jacob Lehoux. Its job is to get interviews for **senior s
 
 - `npm run dev`: local dev server at http://localhost:4321
 - `npm run build`: production build into `dist/`
-- `npm run check:todo`: fails if any `TODO(jacob)` placeholder is left in `src/` (CI runs this before deploying)
+- `npm run check:todo`: fails if a `TODO(jacob)` placeholder would be published (CI runs this before deploying)
 
 ## Where things live
 
 - `src/data/site.ts`: name, contact links, experience, skills
 - `src/content/work/*.md`: case studies (schema in `src/content.config.ts`). `order` sets the card order, and `draft: true` hides one.
+- `scripts/check-todos.mjs`: the placeholder check
 - `src/pages/index.astro`: home page. `src/pages/work/[...slug].astro`: case-study page.
 - `public/resume.pdf`: the resume served at `/resume.pdf`
 
@@ -26,7 +27,8 @@ Personal portfolio for Jacob Lehoux. Its job is to get interviews for **senior s
 - Write for a senior hiring manager: ownership, system design, tradeoffs and measurable impact come before lists of technologies.
 - Every case study follows: problem → what I built → key decisions and tradeoffs → results → what I'd do differently.
 - **Wayfair work is confidential.** No internal product, service or team names, no code, no internal screenshots, no repo links. Round every number. Describe patterns, not proprietary implementation. Set `confidential: true` on those entries.
-- Only finished work goes on the site. Unfinished projects stay off the site or get `draft: true`.
+- Ship in small pieces. A case study that isn't finished gets `status: in-progress`: its card shows an "In progress" badge, and its page shows only the summary, facts and metrics with a "write-up in progress" note. The body, repo/demo links and any `TODO(jacob)` notes are not rendered. Switch it to published (remove the line) once the body is done.
+- Everything that IS rendered must be true and finished. `TODO(jacob)` anywhere outside an in-progress case study blocks the deploy.
 - Never put a phone number on the site.
 
 ## Design

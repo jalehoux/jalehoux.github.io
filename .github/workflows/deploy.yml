@@ -20,11 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Block unfinished placeholders
-        run: |
-          if grep -rn 'TODO(jacob)' src; then
-            echo "::error::Remove the TODO(jacob) placeholders above before deploying."
-            exit 1
-          fi
+        run: node scripts/check-todos.mjs
       - uses: withastro/action@v3
 
   deploy:

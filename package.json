@@ -6,7 +6,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check:todo": "! grep -rn 'TODO(jacob)' src"
+    "check:todo": "node scripts/check-todos.mjs"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",

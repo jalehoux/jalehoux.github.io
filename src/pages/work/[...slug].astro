@@ -8,7 +8,8 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { title, summary, context, role, period, stack, metrics, confidential, links } = entry.data;
+const { title, summary, context, role, period, stack, metrics, confidential, links, status } = entry.data;
+const inProgress = status === 'in-progress';
 const { Content } = await render(entry);
 ---
 
@@ -16,7 +17,7 @@ const { Content } = await render(entry);
   <article class="wrap">
     <a class="back" href="/#work">← All work</a>
     <header>
-      <p class="eyebrow">{context} · {period}</p>
+      <p class="eyebrow">{context}{period && ` · ${period}`}</p>
       <h1>{title}</h1>
       <p class="lede">{summary}</p>
     </header>
@@ -28,7 +29,7 @@ const { Content } = await render(entry);
         <p class="tags">{stack.map((s) => <span class="tag">{s}</span>)}</p>
       </div>
       {
-        (links.repo || links.demo) && (
+        !inProgress && (links.repo || links.demo) && (
           <div>
             <span class="eyebrow">Links</span>
             <p>
@@ -63,9 +64,18 @@ const { Content } = await render(entry);
       )
     }
 
-    <div class="prose">
-      <Content />
-    </div>
+    {
+      inProgress ? (
+        <p class="wip">
+          <strong>Full write-up in progress.</strong> I'm finishing this project and the case study now.
+          Check back soon, or <a href="mailto:jalehoux@gmail.com">ask me about it</a>.
+        </p>
+      ) : (
+        <div class="prose">
+          <Content />
+        </div>
+      )
+    }
   </article>
 </Base>
 
@@ -108,6 +118,15 @@ const { Content } = await render(entry);
     max-width: var(--measure);
   }
 
+  .wip {
+    margin: 2.5rem 0 0;
+    padding: 1rem 1.25rem;
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+    color: var(--muted);
+    max-width: var(--measure);
+  }
+  .wip strong { color: var(--ink); }
   .prose { max-width: var(--measure); margin-top: 2.5rem; }
   .prose :global(h2) { font-size: 1.7rem; margin-top: 2.5rem; }
   .prose :global(h3) { font-size: 1.25rem; margin-top: 1.75rem; }
