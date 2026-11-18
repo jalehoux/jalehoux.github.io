@@ -1,16 +1,11 @@
-# Jacob Lehoux Developer Portfolio
+# jacoblehoux.com
 
-My developer portfolio built using a Start Bootstrap template.
-[Portfolio](http://www.jacoblehoux.com/)
+Source for my personal site, built with [Astro](https://astro.build) and deployed to GitHub Pages.
 
-## Development
+```sh
+npm install
+npm run dev     # http://localhost:4321
+npm run build   # static site in dist/
+```
 
-Built with Bootstrap 4
-
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
-
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+Case studies live in `src/content/work/` as Markdown files. Push to `master` and GitHub Actions builds and deploys the site.

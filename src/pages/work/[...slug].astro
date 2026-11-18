@@ -1,0 +1,157 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const work = await getCollection('work', ({ data }) => !data.draft);
+  return work.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { title, summary, context, role, period, stack, metrics, confidential, links, status } = entry.data;
+const inProgress = status === 'in-progress';
+const { Content } = await render(entry);
+---
+
+<Base title={title} description={summary}>
+  <article class="wrap">
+    <a class="back" href="/#work">← All work</a>
+    <header>
+      <p class="eyebrow">{context}{period && ` · ${period}`}</p>
+      <h1>{title}</h1>
+      <p class="lede">{summary}</p>
+    </header>
+
+    <aside class="facts">
+      <div><span class="eyebrow">Role</span><p>{role}</p></div>
+      <div>
+        <span class="eyebrow">Stack</span>
+        <p class="tags">{stack.map((s) => <span class="tag">{s}</span>)}</p>
+      </div>
+      {
+        !inProgress && (links.repo || links.demo) && (
+          <div>
+            <span class="eyebrow">Links</span>
+            <p>
+              {links.repo && <a href={links.repo}>Source</a>}
+              {links.repo && links.demo && ' · '}
+              {links.demo && <a href={links.demo}>Live demo</a>}
+            </p>
+          </div>
+        )
+      }
+    </aside>
+
+    {
+      metrics.length > 0 && (
+        <ul class="metrics">
+          {metrics.map((m) => (
+            <li>
+              <strong>{m.value}</strong>
+              <span>{m.label}</span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    {
+      confidential && (
+        <p class="note">
+          Built at my employer, so there's no code or internal detail here. Names are generic and
+          numbers are rounded. Happy to go deeper in conversation.
+        </p>
+      )
+    }
+
+    {
+      inProgress ? (
+        <p class="wip">
+          <strong>Full write-up in progress.</strong> I'm finishing this project and the case study now.
+          Check back soon, or <a href="mailto:jalehoux@gmail.com">ask me about it</a>.
+        </p>
+      ) : (
+        <div class="prose">
+          <Content />
+        </div>
+      )
+    }
+  </article>
+</Base>
+
+<style>
+  article { padding-top: 2.5rem; padding-bottom: 5rem; }
+  .back { font-size: 0.9rem; color: var(--muted); text-decoration: none; }
+  header { margin: 2rem 0; max-width: 46rem; }
+  h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); margin-top: 0.75rem; }
+  .lede { font-size: 1.2rem; color: var(--muted); margin: 0; }
+
+  .facts {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 1.5rem;
+    padding: 1.25rem 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .facts p { margin: 0.35rem 0 0; }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+  .metrics {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+  .metrics li { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.25rem; }
+  .metrics strong { display: block; font-family: var(--serif); font-size: clamp(1.3rem, 4.5vw, 1.9rem); font-weight: 500; color: var(--accent); }
+  .metrics span { font-size: 0.9rem; color: var(--muted); }
+
+  .note {
+    margin: 2rem 0 0;
+    padding: 0.85rem 1.1rem;
+    background: var(--accent-soft);
+    border-radius: 10px;
+    font-size: 0.93rem;
+    max-width: var(--measure);
+  }
+
+  .wip {
+    margin: 2.5rem 0 0;
+    padding: 1rem 1.25rem;
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+    color: var(--muted);
+    max-width: var(--measure);
+  }
+  .wip strong { color: var(--ink); }
+  .prose { max-width: var(--measure); margin-top: 2.5rem; }
+  .prose :global(h2) { font-size: 1.7rem; margin-top: 2.5rem; }
+  .prose :global(h3) { font-size: 1.25rem; margin-top: 1.75rem; }
+  .prose :global(li) { margin: 0.35rem 0; }
+  .prose :global(blockquote) {
+    margin: 1.5rem 0;
+    padding: 0.75rem 1.1rem;
+    border-left: 3px solid #d39b2a;
+    background: color-mix(in srgb, #d39b2a 12%, transparent);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.95rem;
+  }
+  .prose :global(blockquote p) { margin: 0.25rem 0; }
+  .prose :global(code) { font-family: var(--mono); font-size: 0.88em; }
+  .prose :global(pre) {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1rem;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 760px) {
+    .facts { grid-template-columns: 1fr; gap: 1rem; }
+  }
+</style>
